@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(uuid())
-  email String  @unique
-  name  String
-  saves Saves[]
-  books Book[]  @relation("BookToUser")
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String?
+  password String
+  saves    Saves[]
+  books    Book[]  @relation("BookToUser")
 
   @@map("users")
 }
