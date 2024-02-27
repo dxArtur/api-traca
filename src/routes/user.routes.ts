@@ -1,10 +1,10 @@
-import { Router } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 import { SignupController } from '../modules/users/signup/signupController'
-import { SignupUseCase } from '../modules/users/signup/signupUseCase'
+import { errorHandle } from '../middlewares/errorHandle'
 
 const route = Router()
 const signupController = SignupController.getInstance()
 
-route.post('/signup', (req, res) => signupController.handle(req, res))
+route.post('/signup', (req: Request, res: Response, next: NextFunction) => signupController.handle(req, res, next))
 
 export default route
