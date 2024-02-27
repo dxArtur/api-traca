@@ -8,31 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  name     String?
+  id       String   @id @default(uuid())
+  email    String   @unique
+  nick     String   @unique
+  name     String
   password String
-  saves    Saves[]
-  books    Book[]  @relation("BookToUser")
+  books    String[]
 
   @@map("users")
-}
-
-model Book {
-  id            String @id @default(uuid())
-  name          String
-  quantityPages Int
-  author        String
-  url           String
-  reader        User[] @relation("BookToUser")
-
-  @@map("books")
-}
-
-model Saves {
-  id       String @id @default(uuid())
-  authorId String
-  author   User   @relation(fields: [authorId], references: [id])
-
-  @@map("saves")
 }

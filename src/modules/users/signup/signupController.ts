@@ -1,5 +1,6 @@
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 import { SignupUseCase } from './signupUseCase'
+import { CreateUserDto, UserDto } from "../../../dto/UserDto"
 
 
 export class SignupController{
@@ -18,15 +19,15 @@ export class SignupController{
     }
     
 
-    async handle(req: Request, res: Response){
+    async handle(req: Request, res: Response, next: NextFunction){
         try {
-            const {email, name, password, saves, books}:any = req.body
-            const dataUser = {email, name, password, saves, books}
+            const {email, name, nick, password}:CreateUserDto = req.body
+            const dataUser:CreateUserDto = {email, name, nick, password}
     
             const result = await this.signupUseCase.execute(dataUser)
-            return res.status(201).json(result)    
+            return res.status(STATUS_CODE_SUCESS.CREATED).json(result)    
         } catch (error) {
-            return res.status(500).json({error: error.message})
+            next(error)
         }
     }
 } 

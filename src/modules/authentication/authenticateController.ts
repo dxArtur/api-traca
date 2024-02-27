@@ -1,5 +1,6 @@
-import {Request, Response} from 'express'
+import {Request, Response, NextFunction} from 'express'
 import { AuthUseCase } from './authenticateUseCase'
+import { SigninInputrDto } from 'dto/UserDto'
 
 export class AuthController{
     private static instance: AuthController
@@ -17,14 +18,15 @@ export class AuthController{
         return AuthController.instance
     }
 
-    async handle(req: Request, res: Response){
+    async handle(req: Request, res: Response, next: NextFunction){
         try {
-            const {email, password} = req.body
-            const response = await this.authUseCase.execute({email, password})
+            const {email, password}:SigninInputrDto = req.body
+            const inputForAuth = {email, password}
+            const response = await this.authUseCase.execute(inputForAuth)
 
             return res.status(200).json(response)
         } catch (error) {
-            return res.status(400).json({error: error.message})
+            next(error)
         }
     }
 }

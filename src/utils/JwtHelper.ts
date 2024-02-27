@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 
+
+
 export class JwtHelper{
 
     static async sign(payload, expiresIn): Promise<string>{
