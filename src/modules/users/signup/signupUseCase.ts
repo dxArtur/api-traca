@@ -1,6 +1,8 @@
 import { RepositoryClient } from "../../../database/prismaClient"
+import { UserDto, CreateUserDto } from "../../../dto/UserDto"
 import { PrismaClient } from "@prisma/client"
 import { BcryptHelper } from "../../../utils/BcryptHelper"
+import { AppError } from "../../../errors/AppErrors"
 
 
 export class SignupUseCase{
@@ -19,7 +21,7 @@ export class SignupUseCase{
         return SignupUseCase.instance
     }
 
-    async execute(dataUser:any):Promise<any>{
+    async execute(dataUser:CreateUserDto):Promise<UserDto>{
         try {
             const existUser = await this.repository.user.findFirst({
                 where:{
@@ -27,7 +29,7 @@ export class SignupUseCase{
                 }
             })
             if (existUser) {
-                throw new Error('User Already exists')
+                throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXIST, STATUS_CODE_CLIENT.BAD_REQUEST)
             }
 
             const hashedPassword = await BcryptHelper.encrypt(dataUser.password)
@@ -35,9 +37,8 @@ export class SignupUseCase{
                 data: {
                     email:dataUser.email,
                     name: dataUser.name,
+                    nick: dataUser.nick,
                     password: hashedPassword,
-                    saves: dataUser.saves,
-                    books: dataUser.books
                 }
             })
     
