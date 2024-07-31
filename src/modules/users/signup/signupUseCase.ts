@@ -3,6 +3,8 @@ import { UserDto, CreateUserDto } from "../../../dto/UserDto"
 import { PrismaClient } from "@prisma/client"
 import { BcryptHelper } from "../../../utils/BcryptHelper"
 import { AppError } from "../../../errors/AppErrors"
+import StatusCode from "../../../custom/constants/StatusCode"
+import ErrorMessages from "../../../custom/constants/ErrorMessages"
 
 
 export class SignupUseCase{
@@ -29,7 +31,7 @@ export class SignupUseCase{
                 }
             })
             if (existUser) {
-                throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXIST, STATUS_CODE_CLIENT.BAD_REQUEST)
+                throw new AppError(ErrorMessages.USER_ALREADY_EXIST , StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST)
             }
 
             const hashedPassword = await BcryptHelper.encrypt(dataUser.password)

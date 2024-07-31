@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express'
 import { AuthUseCase } from './authenticateUseCase'
-import { SigninInputrDto } from 'dto/UserDto'
+import { SigninInputrDto } from '../../dto/UserDto'
 
 export class AuthController{
     private static instance: AuthController

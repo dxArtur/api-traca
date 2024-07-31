@@ -5,7 +5,6 @@ CREATE TABLE "users" (
     "nick" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "books" TEXT[],
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );

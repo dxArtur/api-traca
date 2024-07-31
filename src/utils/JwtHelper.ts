@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
+import { JwtPayload } from '../modules/authentication/JwtPayload'
 
 
 
 export class JwtHelper{
 
-    static async sign(payload, expiresIn): Promise<string>{
+    static async sign(payload:JwtPayload, expiresIn:string): Promise<string>{
         const token = jwt.sign(
             {
                 name: payload.name,

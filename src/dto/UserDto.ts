@@ -4,7 +4,6 @@ export interface UserDto{
     nick: string;
     email: string;
     password: string;
-    books?: string[];
 }
 
 export interface CreateUserDto{

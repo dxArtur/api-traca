@@ -25,8 +25,9 @@ export class SignupController{
             const dataUser:CreateUserDto = {email, name, nick, password}
     
             const result = await this.signupUseCase.execute(dataUser)
-            return res.status(STATUS_CODE_SUCESS.CREATED).json(result)    
+            return res.status(201).json(result)    
         } catch (error) {
+            console.log(error)
             next(error)
         }
     }

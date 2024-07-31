@@ -13,7 +13,6 @@ model User {
   nick     String   @unique
   name     String
   password String
-  books    String[]
 
   @@map("users")
 }
