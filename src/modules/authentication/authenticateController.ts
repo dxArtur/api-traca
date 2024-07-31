@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from 'express'
 import { AuthUseCase } from './authenticateUseCase'
 import { SigninInputrDto } from '../../dto/UserDto'
+import StatusCode from '../../custom/constants/StatusCode'
 
 export class AuthController{
     private static instance: AuthController
@@ -24,7 +25,7 @@ export class AuthController{
             const inputForAuth = {email, password}
             const response = await this.authUseCase.execute(inputForAuth)
 
-            return res.status(200).json(response)
+            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
         } catch (error) {
             next(error)
         }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { UpdateUserUseCase } from "./updateUserUseCase"
-import { STATUS_CODE_SUCESS } from "custom/constants/StatusCode"
+import STATUS_CODE from "../../../custom/constants/StatusCode"
 
 export class UpdateUserControler{
     private static instance: UpdateUserControler
@@ -22,7 +22,7 @@ export class UpdateUserControler{
             const dataUpdated = {email, name, nick, password}
             const userId = req.params.userId
             const response = await this.updateUserUseCase.execute(userId, dataUpdated)
-            return res.status(STATUS_CODE_SUCESS.OK).json(response)
+            return res.status(STATUS_CODE.STATUS_CODE_SUCESS.OK).json(response)
         }catch (error) {
             
         }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { GetUserByIdUseCase } from "./getUserByIdUseCase"
-import { STATUS_CODE_SUCESS } from "../../../custom/constants/StatusCode"
+import STATUS_CODE from "../../../custom/constants/StatusCode"
 
 
 export class GetUserByIdController{
@@ -24,7 +24,7 @@ export class GetUserByIdController{
         try {
             const userId = req.params.userId
             const response = await this.getUserByIdUseCase.execute(userId)
-            return res.status(STATUS_CODE_SUCESS.OK).json(response)
+            return res.status(STATUS_CODE.STATUS_CODE_SUCESS.OK).json(response)
         } catch (error) {
             next(error)
         }

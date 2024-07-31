@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client"
 import { RepositoryClient } from "../../../database/prismaClient" 
 import { AppError } from "../../../errors/AppErrors"
 import { UserDto } from "../../../dto/UserDto"
-import { ERROR_MESSAGES } from "../../../custom/constants/ErrorMessages"
-import { STATUS_CODE_CLIENT } from "../../../custom/constants/StatusCode"
+import ERROR_MESSAGES from "../../../custom/constants/ErrorMessages"
+import STATUS_CODE from "../../../custom/constants/StatusCode"
 
 export class GetUserByIdUseCase{
     private static instance: GetUserByIdUseCase
@@ -29,7 +29,7 @@ export class GetUserByIdUseCase{
                 }
             })
             if (!user) {
-                throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXIST, STATUS_CODE_CLIENT.BAD_REQUEST)
+                throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXIST, STATUS_CODE.STATUS_CODE_CLIENT.BAD_REQUEST)
             }
 
             return user

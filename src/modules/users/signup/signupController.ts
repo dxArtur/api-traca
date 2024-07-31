@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { SignupUseCase } from './signupUseCase'
 import { CreateUserDto, UserDto } from "../../../dto/UserDto"
+import StatusCode from "../../../custom/constants/StatusCode"
 
 
 export class SignupController{
@@ -25,7 +26,7 @@ export class SignupController{
             const dataUser:CreateUserDto = {email, name, nick, password}
     
             const result = await this.signupUseCase.execute(dataUser)
-            return res.status(201).json(result)    
+            return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(result)    
         } catch (error) {
             console.log(error)
             next(error)
