@@ -28,7 +28,6 @@ export class SignupController{
             const result = await this.signupUseCase.execute(dataUser)
             return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(result)    
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }

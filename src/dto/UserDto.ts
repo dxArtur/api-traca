@@ -13,7 +13,7 @@ export interface CreateUserDto{
     password: string;
 }
 
-export interface SigninInputrDto{
+export interface SigninUserDto{
     email: string;
     password: string;
 }
