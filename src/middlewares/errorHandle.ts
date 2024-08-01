@@ -16,6 +16,7 @@ export function errorHandle(
     }
 
     else {
+        console.log(error)
         return res.status(500).json({
             status: "Error",
             message: "Error server internal"
