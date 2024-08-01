@@ -2,9 +2,10 @@ import { RepositoryClient } from "../../database/prismaClient"
 import { PrismaClient } from "@prisma/client"
 import { BcryptHelper } from "../../utils/BcryptHelper"
 import { JwtHelper } from "../../utils/JwtHelper"
-import { SigninInputrDto } from "../../dto/UserDto"
+import { SigninUserDto } from "../../dto/UserDto"
 import { AppError } from '../../errors/AppErrors'
 import { JwtPayload } from "./JwtPayload"
+import ErrorMessages from "../../custom/constants/ErrorMessages"
 
 
 export class AuthUseCase{
@@ -22,7 +23,7 @@ export class AuthUseCase{
         return AuthUseCase.instance
     }
 
-    async execute(dataUser:SigninInputrDto):Promise<string> {
+    async execute(dataUser:SigninUserDto):Promise<string> {
         try {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where:{
@@ -31,13 +32,13 @@ export class AuthUseCase{
             })
     
             if (!userAttemphAuth) {
-                throw new AppError('User not found', 400)
+                throw new AppError(ErrorMessages.BAD_AUTH, 400)
             }
     
             const matchKeys = await BcryptHelper.match(dataUser.password, userAttemphAuth.password)
             
             if (!matchKeys){
-                throw new AppError('usuario e/ou senha inválidas', 401)
+                throw new AppError(ErrorMessages.BAD_AUTH, 401)
             }
     
             const payload: JwtPayload = {name: userAttemphAuth.name, nick:userAttemphAuth.nick, email: userAttemphAuth.email, id: userAttemphAuth.id}
