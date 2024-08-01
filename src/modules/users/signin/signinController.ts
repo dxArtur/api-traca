@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client"
+import {  } from "@prisma/client"
 import { SigninUseCase } from "./signinUseCase"
-import { RepositoryClient } from "../../../database/prismaClient"
 import { SigninUserDto } from "../../../dto/UserDto"
+import { NextFunction, Request, Response } from "express"
+import StatusCode from "../../../custom/constants/StatusCode"
 
 
 
@@ -10,20 +11,28 @@ export class SigninController {
     private signinUseCase: SigninUseCase
 
 
-    constructor(signinUseCase: PrismaClient) {
+    constructor(signinUseCase: SigninUseCase) {
         this.signinUseCase = signinUseCase
     }
 
     public static getInstance() {
         if (! SigninController.instance) {
-            SigninUseCase.instance = new SigninUseCase(RepositoryClient.getInstance())
+            SigninController.instance = new SigninController(SigninUseCase.getInstance())
         }
 
         return SigninController.instance
     }
 
-    async execute(dataUser: SigninUserDto): Promise<SigninUserDto> {
-        const userAttemphAuth = await this.repository.user.
-        return { token,  userAttemphAuth }
+    async handle(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {email, password} = req.body
+            const dataUser: SigninUserDto = {email, password}
+
+            const response = await this.signinUseCase.execute(dataUser)
+            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
+        }catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
 }
