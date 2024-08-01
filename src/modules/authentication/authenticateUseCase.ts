@@ -47,6 +47,7 @@ export class AuthUseCase{
             return token
             
         } catch (error) {
+            console.log(error)
             throw error
         }
     }
