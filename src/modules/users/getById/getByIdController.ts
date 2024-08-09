@@ -20,7 +20,6 @@ export class GetUserByIdController{
     }
 
     async handle(req: Request, res: Response, next: NextFunction) {
-
         try {
             const userId = req.params.userId
             const response = await this.getUserByIdUseCase.execute(userId)

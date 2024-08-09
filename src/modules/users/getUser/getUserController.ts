@@ -4,8 +4,8 @@ import StatusCode from "../../../custom/constants/StatusCode"
 
 
 
-export class Controller {
-    private static instance: Controller
+export class GetUserController {
+    private static instance: GetUserController
     private useCase: UseCase
 
 
@@ -14,11 +14,11 @@ export class Controller {
     }
 
     public static getInstance() {
-        if (! Controller.instance) {
-            Controller.instance = new Controller(UseCase.getInstance())
+        if (! GetUserController.instance) {
+            GetUserController.instance = new GetUserController(UseCase.getInstance())
         }
 
-        return Controller.instance
+        return GetUserController.instance
     }
 
     async handle(req:Request, res:Response, next:NextFunction) {
