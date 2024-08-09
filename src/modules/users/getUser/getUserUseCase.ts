@@ -1,31 +1,31 @@
 import { PrismaClient } from "@prisma/client"
-import { RepositoryClient } from "../../../database/prismaClient" 
+import { RepositoryClient } from "../../../database/prismaClient"
 import { AppError } from "../../../errors/AppErrors"
-import { UserDto } from "../../../dto/UserDto"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
 import StatusCode from "../../../custom/constants/StatusCode"
 
-export class GetUserByIdUseCase{
-    private static instance: GetUserByIdUseCase
+
+
+export class UseCase {
+    private static instance: UseCase
     private repository: PrismaClient
 
     constructor(repository: PrismaClient) {
-        this.repository= repository
+        this.repository = repository
     }
 
     public static getInstance() {
-        if (!GetUserByIdUseCase.instance) {
-            GetUserByIdUseCase.instance = new GetUserByIdUseCase(RepositoryClient.getInstance())
+        if (!UseCase.instance) {
+            UseCase.instance = new UseCase(RepositoryClient.getInstance())
         }
-
-        return GetUserByIdUseCase.instance
+        return UseCase.instance
     }
 
-    async execute(userId: string): Promise<UserDto>{
+    async execute(username: string) {
         try {
             const user = await this.repository.user.findUniqueOrThrow({
                 where: {
-                    id: userId
+                    nick: username
                 }
             })
             if (!user) {
