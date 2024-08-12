@@ -1,15 +1,18 @@
-import jwt from 'jsonwebtoken'
+import jwt, { verify } from 'jsonwebtoken'
 import { JwtPayload } from '../modules/authentication/JwtPayload'
+import { Request, Response, NextFunction } from "express"
 
-
+interface IPayload{
+    sub:string;
+    iat:number;
+    exp: number;
+  }
 
 export class JwtHelper{
 
     static async sign(payload:JwtPayload, expiresIn:string): Promise<string>{
         const token = jwt.sign(
             {
-                name: payload.name,
-                email: payload.email,
                 sub: payload.id
             }, 
             process.env.SECRET!,
@@ -21,8 +24,10 @@ export class JwtHelper{
             return token
     }
 
-    static async verify(){
-
+    static async verify(token: string): Promise<string|null>{
+        const { sub } = verify(token, process.env.SECRET!) as IPayload
+        return sub || null
+        
     }
 
 

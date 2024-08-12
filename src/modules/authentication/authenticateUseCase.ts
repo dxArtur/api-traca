@@ -41,7 +41,7 @@ export class AuthUseCase{
                 throw new AppError(ErrorMessages.BAD_AUTH, 401)
             }
     
-            const payload: JwtPayload = {name: userAttemphAuth.name, nick:userAttemphAuth.nick, email: userAttemphAuth.email, id: userAttemphAuth.id}
+            const payload: JwtPayload = { id: userAttemphAuth.id}
             const expiration: string = '1h'
             const token = JwtHelper.sign(payload, expiration)
             return token

@@ -41,9 +41,6 @@ export class SigninUseCase{
 
             const token = JwtHelper.sign(
                 {
-                    name: userAttemphAuth.name,
-                    email: userAttemphAuth.email,
-                    nick: userAttemphAuth.nick,
                     id: userAttemphAuth.id
                 },
                 '1h'

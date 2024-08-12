@@ -1,13 +1,19 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { SignupController } from '../modules/users/signup/signupController'
 import { GetUserController } from '../modules/users/getUser/getUserController'
+import { ProfileController } from '../modules/users/profile/profileController'
 import { errorHandle } from '../middlewares/errorHandle'
 
 const route = Router()
 const signupController = SignupController.getInstance()
 
 route.post('/signup', (req: Request, res: Response, next: NextFunction) => signupController.handle(req, res, next))
+
 route.get('/user/:username', (req:Request, res: Response, next:NextFunction)=>
     GetUserController.getInstance().handle(req, res, next))
 
-export default route
+route.get('/profile', (req:Request, res: Response, next:NextFunction)=>
+    ProfileController.getInstance().handle(req, res, next))
+
+
+export default route 
