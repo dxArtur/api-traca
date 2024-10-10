@@ -2,7 +2,7 @@ import { RepositoryClient } from "../../database/prismaClient"
 import { PrismaClient } from "@prisma/client"
 import { BcryptHelper } from "../../utils/BcryptHelper"
 import { JwtHelper } from "../../utils/JwtHelper"
-import { SigninUserDto } from "../../dto/UserDto"
+import { sanitizedUserInfo, SigninUserDto, UserDto } from "../../dto/UserDto"
 import { AppError } from '../../errors/AppErrors'
 import { JwtPayload } from "./JwtPayload"
 import ErrorMessages from "../../custom/constants/ErrorMessages"
@@ -23,7 +23,7 @@ export class AuthUseCase{
         return AuthUseCase.instance
     }
 
-    async execute(dataUser:SigninUserDto):Promise<string> {
+    async execute(dataUser:SigninUserDto):Promise<{token: string; userData: sanitizedUserInfo}> {
         try {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where:{
@@ -40,11 +40,18 @@ export class AuthUseCase{
             if (!matchKeys){
                 throw new AppError(ErrorMessages.BAD_AUTH, 401)
             }
-    
-            const payload: JwtPayload = { id: userAttemphAuth.id}
+
+            const userData :sanitizedUserInfo = {
+                id: userAttemphAuth.id,
+                email: userAttemphAuth.email,
+                name: userAttemphAuth.name,
+                nick: userAttemphAuth.nick
+            }
+            
+            const payload: JwtPayload = userData
             const expiration: string = '1h'
-            const token = JwtHelper.sign(payload, expiration)
-            return token
+            const token = await JwtHelper.sign(payload, expiration)
+            return {token, userData }
             
         } catch (error) {
             console.log(error)

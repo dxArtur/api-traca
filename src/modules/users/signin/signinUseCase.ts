@@ -22,7 +22,7 @@ export class SigninUseCase{
         return SigninUseCase.instance
     }
 
-    async execute({email, password}: SigninUserDto): Promise<{token: string; userData: UserDto}> {
+    async execute({email, password}: SigninUserDto) {
         try {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where: {
@@ -39,15 +39,10 @@ export class SigninUseCase{
                 throw new Error(ErrorMessages.BAD_AUTH)
             }
 
-            const token = await JwtHelper.sign(
-                {
-                    id: userAttemphAuth.id
-                },
-                '1h'
-            )
+            const token = await JwtHelper.sign(userAttemphAuth,  '1h')
 
 
-            return {token, userData:userAttemphAuth /* , userData: {id: userAttemphAuth.id, name:userAttemphAuth.name, nick:userAttemphAuth.nick, email:userAttemphAuth.email, password:userAttemphAuth.password} */ }
+            return {token, userAttemphAuth /* , userData: {id: userAttemphAuth.id, name:userAttemphAuth.name, nick:userAttemphAuth.nick, email:userAttemphAuth.email, password:userAttemphAuth.password} */ }
         } catch (error) {
             throw error 
         } 

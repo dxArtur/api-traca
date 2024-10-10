@@ -18,9 +18,9 @@ export interface SigninUserDto{
     password: string;
 }
 
-export interface UserSanitized{
+export interface sanitizedUserInfo{
+    id: string;
     name: string;
     nick: string;
     email: string;
-    password: string;
 }

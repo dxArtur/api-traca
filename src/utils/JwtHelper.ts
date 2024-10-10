@@ -11,9 +11,13 @@ interface IPayload{
 export class JwtHelper{
 
     static async sign(payload:JwtPayload, expiresIn:string): Promise<string>{
+
         const token = jwt.sign(
             {
-                sub: payload.id
+                sub: payload.id,
+                name: payload.name,
+                email: payload.email,
+                nick: payload.nick,
             }, 
             process.env.SECRET!,
             {

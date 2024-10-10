@@ -1,4 +1,3 @@
-import {  } from "@prisma/client"
 import { SigninUseCase } from "./signinUseCase"
 import { SigninUserDto } from "../../../dto/UserDto"
 import { NextFunction, Request, Response } from "express"
@@ -27,8 +26,8 @@ export class SigninController {
         try {
             const {email, password} = req.body
             const dataUser: SigninUserDto = {email, password}
-            const {token, userData} = await this.signinUseCase.execute(dataUser)
-            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json({token, userData})
+            const response = await this.signinUseCase.execute(dataUser)
+            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
         }catch (error) {
             console.log(error)
             next(error)
