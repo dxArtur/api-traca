@@ -27,9 +27,8 @@ export class SigninController {
         try {
             const {email, password} = req.body
             const dataUser: SigninUserDto = {email, password}
-
-            const response = await this.signinUseCase.execute(dataUser)
-            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
+            const {token, userData} = await this.signinUseCase.execute(dataUser)
+            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json({token, userData})
         }catch (error) {
             console.log(error)
             next(error)

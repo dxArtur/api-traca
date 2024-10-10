@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { RepositoryClient } from "../../../database/prismaClient"
-import { SigninUserDto, UserDto } from "../../../dto/UserDto"
+import { SigninUserDto, UserDto, UserSanitized } from "../../../dto/UserDto"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
 import { BcryptHelper } from "../../../utils/BcryptHelper"
 import { JwtHelper } from "../../../utils/JwtHelper"
@@ -22,7 +22,7 @@ export class SigninUseCase{
         return SigninUseCase.instance
     }
 
-    async execute({email, password}: SigninUserDto) {
+    async execute({email, password}: SigninUserDto): Promise<{token: string; userData: UserDto}> {
         try {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where: {
@@ -39,14 +39,15 @@ export class SigninUseCase{
                 throw new Error(ErrorMessages.BAD_AUTH)
             }
 
-            const token = JwtHelper.sign(
+            const token = await JwtHelper.sign(
                 {
                     id: userAttemphAuth.id
                 },
                 '1h'
             )
 
-            return {token, userAttemphAuth}
+
+            return {token, userData:userAttemphAuth /* , userData: {id: userAttemphAuth.id, name:userAttemphAuth.name, nick:userAttemphAuth.nick, email:userAttemphAuth.email, password:userAttemphAuth.password} */ }
         } catch (error) {
             throw error 
         } 

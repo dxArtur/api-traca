@@ -14,5 +14,68 @@ model User {
   name     String
   password String
 
+  // Relacionamento de seguimento
+  following Follow[] @relation("FollowingRelation")
+  followers  Follow[] @relation("FollowersRelation")
+
+  // Relacionamento com posts
+  posts      Post[]
+  likes      Like[]
+  comments   Comment[]
+
   @@map("users")
+}
+
+model Follow {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+
+  follower   User @relation("FollowersRelation", fields: [followerId], references: [id])
+  following  User @relation("FollowingRelation", fields: [followingId], references: [id])
+
+  @@map("follows")
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com o usuário
+  authorId  String
+  author    User @relation(fields: [authorId], references: [id])
+
+  // Relacionamentos com curtidas e comentários
+  likes     Like[]
+  comments  Comment[]
+
+  @@map("posts")
+}
+
+model Like {
+  id        String @id @default(uuid())
+  userId    String
+  postId    String
+
+  // Relacionamentos
+  user      User @relation(fields: [userId], references: [id])
+  post      Post @relation(fields: [postId], references: [id])
+
+  @@map("likes")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  // Relacionamento com o usuário e post
+  authorId  String
+  postId    String
+  author    User @relation(fields: [authorId], references: [id])
+  post      Post @relation(fields: [postId], references: [id])
+
+  @@map("comments")
 }

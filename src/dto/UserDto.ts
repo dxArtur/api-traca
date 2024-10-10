@@ -17,3 +17,10 @@ export interface SigninUserDto{
     email: string;
     password: string;
 }
+
+export interface UserSanitized{
+    name: string;
+    nick: string;
+    email: string;
+    password: string;
+}
