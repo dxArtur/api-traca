@@ -6,4 +6,7 @@ const route = Router()
 route.get('/search/:query', (req:Request, res: Response, next:NextFunction)=>
     QueryController.getInstance().handle(req, res, next))
 
+route.get('/check-username/:nick', (req:Request, res: Response, next:NextFunction)=>
+    QueryController.getInstance().handle(req, res, next))
+
 export default route
