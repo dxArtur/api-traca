@@ -46,10 +46,17 @@ export class SignupUseCase{
             
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
-                // Trata o erro do usuário já cadastrado
-                throw new AppError(ErrorMessages.USER_ALREADY_EXIST, StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
+                if (error.code === 'P2002') {
+                    throw new AppError(ErrorMessages.USER_ALREADY_EXIST, StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
+                }
+            } else {
+                // Se não for um erro conhecido, relança
+                throw new AppError("Um erro inesperado ocorreu.", StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
             }
-            throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
+    
+            
+            // Para outros erros, relança o erro
+            throw error;
         }
     }
 }
