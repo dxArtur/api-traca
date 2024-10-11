@@ -50,12 +50,9 @@ export class SignupUseCase{
                     throw new AppError(ErrorMessages.USER_ALREADY_EXIST, StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
                 }
             } else {
-                // Se não for um erro conhecido, relança
                 throw new AppError("Um erro inesperado ocorreu.", StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
             }
-    
-            
-            // Para outros erros, relança o erro
+
             throw error;
         }
     }
