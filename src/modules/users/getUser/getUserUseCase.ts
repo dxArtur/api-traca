@@ -3,6 +3,7 @@ import { RepositoryClient } from "../../../database/prismaClient"
 import { AppError } from "../../../errors/AppErrors"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
 import StatusCode from "../../../custom/constants/StatusCode"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 
 
 
@@ -27,14 +28,14 @@ export class UseCase {
                 where: {
                     nick: username
                 }
-            })
-            if (!user) {
-                throw new AppError(ErrorMessages.USER_NOT_FOUND, StatusCode.STATUS_CODE_CLIENT.NOT_FOUND)
-            }
-
-            return user
+            });
+            return user; // Retorna o usuário se encontrado
         } catch (error) {
-            throw error
+            if (error instanceof PrismaClientKnownRequestError) {
+                // Trata o erro de "não encontrado"
+                throw new AppError(ErrorMessages.USER_NOT_FOUND, StatusCode.STATUS_CODE_CLIENT.NOT_FOUND);
+            }
+            throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
         }
-    }
+}
 }
