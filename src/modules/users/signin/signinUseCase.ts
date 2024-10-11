@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { RepositoryClient } from "../../../database/prismaClient"
-import { SigninUserDto, UserDto, UserSanitized } from "../../../dto/UserDto"
+import { SigninUserDto } from "../../../dto/UserDto"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
 import { BcryptHelper } from "../../../utils/BcryptHelper"
 import { JwtHelper } from "../../../utils/JwtHelper"

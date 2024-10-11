@@ -5,6 +5,7 @@ import { BcryptHelper } from "../../../utils/BcryptHelper"
 import { AppError } from "../../../errors/AppErrors"
 import StatusCode from "../../../custom/constants/StatusCode"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 
 
 export class SignupUseCase{
@@ -30,9 +31,6 @@ export class SignupUseCase{
                     email: dataUser.email
                 }
             })
-            if (existUser) {
-                throw new AppError(ErrorMessages.USER_ALREADY_EXIST , StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST)
-            }
 
             const hashedPassword = await BcryptHelper.encrypt(dataUser.password)
             const newUser = await this.repository.user.create({
@@ -47,7 +45,11 @@ export class SignupUseCase{
             return newUser
             
         } catch (error) {
-            throw error 
+            if (error instanceof PrismaClientKnownRequestError) {
+                // Trata o erro do usuário já cadastrado
+                throw new AppError(ErrorMessages.USER_ALREADY_EXIST, StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
+            }
+            throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
         }
     }
 }
