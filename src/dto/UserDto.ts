@@ -1,3 +1,5 @@
+import { Follow, Post } from "@prisma/client";
+
 export interface UserDto{
     id?: string;
     name: string;
@@ -23,4 +25,6 @@ export interface sanitizedUserInfo{
     name: string;
     nick: string;
     email: string;
+    followers: Follow[]; 
+    posts: Post[];
 }
