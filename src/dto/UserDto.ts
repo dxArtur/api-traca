@@ -25,6 +25,4 @@ export interface sanitizedUserInfo{
     name: string;
     nick: string;
     email: string;
-    followers: Follow[]; 
-    posts: Post[];
 }

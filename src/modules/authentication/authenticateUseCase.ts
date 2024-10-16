@@ -30,10 +30,6 @@ export class AuthUseCase {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where: {
                     email: dataUser.email,
-                },
-                include: {
-                    followers: true,
-                    posts: true
                 }
             })
 
@@ -48,9 +44,7 @@ export class AuthUseCase {
                 id: userAttemphAuth.id,
                 email: userAttemphAuth.email,
                 name: userAttemphAuth.name,
-                nick: userAttemphAuth.nick,
-                followers:userAttemphAuth.followers,
-                posts: userAttemphAuth.posts,
+                nick: userAttemphAuth.nick
             }
 
             const payload: JwtPayload = userData
