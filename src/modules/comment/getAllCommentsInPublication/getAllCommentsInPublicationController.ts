@@ -27,7 +27,7 @@ export class GetAllCommentsInPublicationController {
             const publicationId = req.params.publicationId
             const response = await this.useCase.execute(publicationId)
 
-            return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(response)
+            return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
         } catch (error) {
             next(error)
         }
