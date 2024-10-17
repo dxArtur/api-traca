@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express"
-import { UseCase } from "./commentPublicationUseCase"
+import { UseCase } from "./getAllCommentsInPublicationUseCase"
 import STATUS_CODE from "../../../custom/constants/StatusCode"
 import StatusCode from "../../../custom/constants/StatusCode"
-import { PostDto } from "../../../dto/PostDto"
+import { PostDto, ReplyDto } from "../../../dto/PostDto"
 
 
-export class CommentPublicationController {
-    private static instance: CommentPublicationController
+export class GetAllCommentsInPublicationController {
+    private static instance: GetAllCommentsInPublicationController
     private useCase: UseCase
 
     constructor(useCase: UseCase) {
@@ -14,18 +14,18 @@ export class CommentPublicationController {
     }
 
     public static getInstance() {
-        if ( !CommentPublicationController.instance ) {
-            CommentPublicationController.instance = new CommentPublicationController(UseCase.getInstance())
+        if ( !GetAllCommentsInPublicationController.instance ) {
+            GetAllCommentsInPublicationController.instance = new GetAllCommentsInPublicationController(UseCase.getInstance())
         }
 
-        return CommentPublicationController.instance
+        return GetAllCommentsInPublicationController.instance
     }
 
     async handle(req: Request, res: Response, next: NextFunction) {
         try {
+            
             const publicationId = req.params.publicationId
-            const {content, authorId}: PostDto = req.body
-            const response = await this.useCase.execute({content, publicationId, authorId})
+            const response = await this.useCase.execute(publicationId)
 
             return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(response)
         } catch (error) {

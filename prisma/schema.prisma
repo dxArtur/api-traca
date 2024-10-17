@@ -56,12 +56,14 @@ model Post {
 
 model Like {
   id        String @id @default(uuid())
-  userId    String
-  postId    String
+  userId    String //autor da curtida
+  postId    String 
 
   // Relacionamentos
   user      User @relation(fields: [userId], references: [id])
   post      Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
 
   @@map("likes")
 }
@@ -76,6 +78,10 @@ model Comment {
   postId    String
   author    User @relation(fields: [authorId], references: [id])
   post      Post @relation(fields: [postId], references: [id])
+
+  parentId  String? // Campo opcional para o comentário pai
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
 
   @@map("comments")
 }

@@ -4,7 +4,7 @@ import StatusCode from "../../../custom/constants/StatusCode"
 import { RepositoryClient } from "../../../database/prismaClient"
 import { UserDto } from "../../../dto/UserDto"
 import { AppError } from "../../../errors/AppErrors"
-import { PostDto } from "../../../dto/PostDto"
+import { GetPostDto, PostDto } from "../../../dto/PostDto"
 
 export class UseCase{
     private static instance: UseCase
@@ -22,7 +22,7 @@ export class UseCase{
         return UseCase.instance
     }
 
-    async execute(): Promise<PostDto[]>{
+    async execute(): Promise<GetPostDto[]>{
         try {
             const allPosts = await this.repository.post.findMany({
                 include: {
@@ -33,10 +33,24 @@ export class UseCase{
                             nick: true,
                         },
                     },
+                    likes: true,
+                    comments: true
                 }
             });
 
-            return allPosts;
+            return allPosts.map(post => ({
+                id: post.id,
+                content: post.content,
+                createdAt: post.createdAt,
+                updatedAt: post.updatedAt,
+                author: {
+                    id: post.author.id,
+                    name: post.author.name,
+                    nick: post.author.nick,
+                },
+                likesCount: post.likes.length, // Conta as curtidas
+                commentCount: post.comments.length, // Conta as curtidas
+            }))
         } catch (error) {
             console.error('Erro ao listar postagens:', error);
 
