@@ -1,7 +1,7 @@
 import { LikeDto } from "./LikeDto";
 
 export interface PostDto{
-    publicationId?:string;
+    parentId?:string;
     content: string;
     authorId: string;
 }

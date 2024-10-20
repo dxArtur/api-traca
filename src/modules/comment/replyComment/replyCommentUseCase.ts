@@ -59,9 +59,9 @@ export class UseCase{
                 content: parentComment?.content,
                 createdAt: parentComment?.createdAt,
                 authorId: parentComment?.authorId,
-                postId: parentComment?.postId,
+                //postId: parentComment?.postId,
                 parentId: parentComment.parentId ?? undefined,
-                replies: parentComment?.replies.map(reply => ({
+                /* replies: parentComment?.replies.map(reply => ({
                     id: reply.id,
                     content: reply.content,
                     createdAt: reply.createdAt,
@@ -69,7 +69,7 @@ export class UseCase{
                     postId: reply.postId,
                     parentId: reply.parentId ?? undefined,
                     replies:[]
-                })) || [] // Garante que será um array vazio se não houver replies
+                })) || [] */ // Garante que será um array vazio se não houver replies
             }
 
 

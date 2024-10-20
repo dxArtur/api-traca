@@ -45,22 +45,7 @@ export class UseCase {
 
             return await Promise.all(comments.map(comment => this.mapComment(comment)))
 
-            /* return comments.map(comment => ({
-                id: comment.id,
-                content: comment.content,
-                createdAt: comment.createdAt,
-                authorId: comment.authorId,
-                postId: comment.postId,
-                parentId: comment.parentId,
-                replies: comment.replies.map(reply => ({
-                    id: reply.id,
-                    content: reply.content,
-                    createdAt: reply.createdAt,
-                    authorId: reply.authorId,
-                    postId: reply.postId,
-                    parentId: reply.parentId,
-                })),
-            })) as CommentDto[]; */
+            
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
             throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
@@ -94,3 +79,21 @@ export class UseCase {
         };
     }
 }
+
+
+/* return comments.map(comment => ({
+                id: comment.id,
+                content: comment.content,
+                createdAt: comment.createdAt,
+                authorId: comment.authorId,
+                postId: comment.postId,
+                parentId: comment.parentId,
+                replies: comment.replies.map(reply => ({
+                    id: reply.id,
+                    content: reply.content,
+                    createdAt: reply.createdAt,
+                    authorId: reply.authorId,
+                    postId: reply.postId,
+                    parentId: reply.parentId,
+                })),
+            })) as CommentDto[]; */

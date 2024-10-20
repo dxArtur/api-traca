@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client"
 import ErrorMessages from "../../../custom/constants/ErrorMessages"
 import StatusCode from "../../../custom/constants/StatusCode"
 import { RepositoryClient } from "../../../database/prismaClient"
-import { UserDto } from "../../../dto/UserDto"
 import { AppError } from "../../../errors/AppErrors"
 import { PostDto } from "../../../dto/PostDto"
+import { CreatedCommentDto } from "../../../dto/CommentDto"
 
 export class UseCase{
     private static instance: UseCase
@@ -22,19 +22,29 @@ export class UseCase{
         return UseCase.instance
     }
 
-    async execute({content, publicationId, authorId}:PostDto): Promise<PostDto>{
+
+
+    async execute({content, parentId, authorId}:PostDto): Promise<CreatedCommentDto>{
         try {
 
-            if (!publicationId) {
+            if (!parentId) {
                 throw new AppError("O ID da publicação é necessário.", StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
             }
+
 
             const newCommentInPublication = await this.repository.comment.create({
                 data: {
                     content: content,
                     authorId: authorId,
-                    postId: publicationId,
+                    postId: parentId,
                 },
+                select: {
+                    id: true,
+                    content: true,
+                    authorId: true,
+                    createdAt: true,
+                    postId: true,
+                }
             });
 
             return newCommentInPublication

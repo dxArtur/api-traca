@@ -8,20 +8,18 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  nick     String   @unique
-  name     String
-  password String
+  id            String        @id @default(uuid())
+  email         String        @unique
+  nick          String        @unique
+  name          String
+  password      String
 
-  // Relacionamento de seguimento
-  following Follow[] @relation("FollowingRelation")
-  followers  Follow[] @relation("FollowersRelation")
-
-  // Relacionamento com posts
-  posts      Post[]
-  likes      Like[]
-  comments   Comment[]
+  following     Follow[]      @relation("FollowingRelation")
+  followers      Follow[]      @relation("FollowersRelation")
+  posts         Post[]
+  likes         Like[]
+  comments      Comment[]
+  commentLikes  CommentLike[]  // Relacionamento para likes em comentários
 
   @@map("users")
 }
@@ -43,23 +41,19 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relacionamento com o usuário
   authorId  String
   author    User @relation(fields: [authorId], references: [id])
-
-  // Relacionamentos com curtidas e comentários
   likes     Like[]
-  comments  Comment[]
+  comments  Comment[] @relation("PostComments")
 
   @@map("posts")
 }
 
 model Like {
   id        String @id @default(uuid())
-  userId    String //autor da curtida
+  userId    String
   postId    String 
 
-  // Relacionamentos
   user      User @relation(fields: [userId], references: [id])
   post      Post @relation(fields: [postId], references: [id])
 
@@ -73,15 +67,30 @@ model Comment {
   content   String
   createdAt DateTime @default(now())
 
-  // Relacionamento com o usuário e post
   authorId  String
-  postId    String
   author    User @relation(fields: [authorId], references: [id])
-  post      Post @relation(fields: [postId], references: [id])
 
-  parentId  String? // Campo opcional para o comentário pai
+  postId    String? // ID do post associado
+  post      Post?    @relation("PostComments", fields: [postId], references: [id])
+
+  parentId  String? // Pode referenciar um comentário pai
   parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[] @relation("CommentReplies")
 
+  commentLikes CommentLike[] // Relacionamento para likes em comentários
+
   @@map("comments")
+}
+
+model CommentLike {
+  id        String @id @default(uuid())
+  userId    String // autor da curtida
+  commentId String // ID do comentário curtido
+
+  user      User @relation(fields: [userId], references: [id])
+  comment   Comment @relation(fields: [commentId], references: [id])
+
+  @@unique([userId, commentId]) // Garantir que um usuário não possa curtir o mesmo comentário mais de uma vez
+
+  @@map("comment_likes")
 }

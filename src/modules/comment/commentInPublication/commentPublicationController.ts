@@ -23,9 +23,9 @@ export class CommentPublicationController {
 
     async handle(req: Request, res: Response, next: NextFunction) {
         try {
-            const publicationId = req.params.publicationId
+            const parentId = req.params.parentId //id da publicação
             const {content, authorId}: PostDto = req.body
-            const response = await this.useCase.execute({content, publicationId, authorId})
+            const response = await this.useCase.execute({content, parentId, authorId})
 
             return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(response)
         } catch (error) {
