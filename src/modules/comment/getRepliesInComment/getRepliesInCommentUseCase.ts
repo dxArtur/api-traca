@@ -22,7 +22,7 @@ export class UseCase {
         return UseCase.instance;
     }
 
-    async execute(parentId: string): Promise<{ replies: CommentDto[]}> {
+    async execute(parentId: string): Promise<CommentDto[]> {
         try {
             if (!parentId) {
                 throw new AppError("O ID do comentário é necessário.", StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
@@ -43,9 +43,7 @@ export class UseCase {
             // Mapeia apenas os replies necessários
             const mappedReplies = replies.map(reply => this.mapReply(reply));
 
-            return {
-                replies: mappedReplies, 
-            }
+            return mappedReplies
         } catch (error) {
             console.error('Erro ao buscar respostas:', error);
             throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
