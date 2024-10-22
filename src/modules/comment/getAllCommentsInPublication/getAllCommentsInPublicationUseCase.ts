@@ -5,7 +5,7 @@ import { RepositoryClient } from "../../../database/prismaClient"
 import { UserDto } from "../../../dto/UserDto"
 import { AppError } from "../../../errors/AppErrors"
 import { PostDto, ReplyDto } from "../../../dto/PostDto"
-import { CommentDto } from "../../../dto/CommentDto"
+import { CommentDto, RepliesCommentDto } from "../../../dto/CommentDto"
 
 export class UseCase {
     private static instance: UseCase
@@ -23,12 +23,12 @@ export class UseCase {
         return UseCase.instance
     }
 
-    async execute(publicationId: string): Promise<CommentDto[]> {
+    async execute(publicationId: string): Promise<RepliesCommentDto[]> {
         try {
-
             if (!publicationId) {
                 throw new AppError("O ID da publicação é necessário.", StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
             }
+
             const comments = await this.repository.comment.findMany({
                 where: {
                     postId: publicationId,
@@ -37,35 +37,37 @@ export class UseCase {
                 include: {
                     replies: {
                         include: {
-                            replies: true, // Inclui replies das replies
-                        }
-                    }
-                }
+                            author: true, // Inclui autor das replies
+                        },
+                    },
+                    author: true, // Inclui autor dos comentários principais
+                },
             });
 
-            return await Promise.all(comments.map(comment => this.mapComment(comment)))
-
-            
+            return await Promise.all(comments.map(comment => this.mapComment(comment)));
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
             throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private async mapComment(comment: any): Promise<CommentDto> {
+    private async mapComment(comment: any): Promise<RepliesCommentDto> {
         const replies = comment.replies || [];
 
         // Mapeia replies de forma recursiva
         const mappedReplies = await Promise.all(replies.map(async (reply: any) => {
-            // Carrega replies das replies
-            const nestedReplies = await this.repository.comment.findMany({
-                where: { parentId: reply.id },
-                include: { replies: true }, // Inclui replies para as replies
-            });
-
-            // Adiciona as replies aninhadas
-            reply.replies = nestedReplies;
-            return this.mapComment(reply); // Mapeia a reply
+            return {
+                id: reply.id,
+                content: reply.content,
+                createdAt: reply.createdAt,
+                author: reply.author ? {
+                    id: reply.author.id,
+                    name: reply.author.name,
+                    nick: reply.author.nick,
+                } : null,
+                parentId: reply.parentId,
+                replies: [], // Pode-se adicionar lógica aqui para replies aninhadas
+            };
         }));
 
         return {
@@ -73,6 +75,11 @@ export class UseCase {
             content: comment.content,
             createdAt: comment.createdAt,
             authorId: comment.authorId,
+            author: {
+                id: comment.author.id,
+                name: comment.author.name,
+                nick: comment.author.nick,
+            },
             postId: comment.postId,
             parentId: comment.parentId,
             replies: mappedReplies,

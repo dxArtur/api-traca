@@ -20,6 +20,12 @@ export interface SigninUserDto{
     password: string;
 }
 
+export interface author{
+    id: string;
+    name: string;
+    nick: string;
+}
+
 export interface sanitizedUserInfo{
     id: string;
     name: string;

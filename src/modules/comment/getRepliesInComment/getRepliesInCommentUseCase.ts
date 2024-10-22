@@ -35,8 +35,9 @@ export class UseCase {
                 include:{
                     commentLikes: true,
                     replies:true,
+                    author:true
                 }
-            });
+            })
 
             //const replyCount = replies.length;
 
@@ -55,7 +56,14 @@ export class UseCase {
             id: reply.id,
             content: reply.content,
             createdAt: reply.createdAt,
+            updatedAt:reply.updatedAT,
             authorId: reply.authorId,
+            author:{
+                id: reply.author.id, // Acesse o ID do autor
+                name: reply.author.name,
+                nick: reply.author.nick,
+                email: reply.author.email
+            },
             //postId: reply.postId,
             parentId: reply.parentId,
             likeCount: reply.commentLikes.length,

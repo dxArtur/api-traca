@@ -5,7 +5,7 @@ import { RepositoryClient } from "../../../database/prismaClient"
 import { UserDto } from "../../../dto/UserDto"
 import { AppError } from "../../../errors/AppErrors"
 import { PostDto, ReplyDto } from "../../../dto/PostDto"
-import { CommentDto } from "../../../dto/CommentDto"
+import { CommentDto, RepliesCommentDto } from "../../../dto/CommentDto"
 
 export class UseCase{
     private static instance: UseCase
@@ -23,7 +23,7 @@ export class UseCase{
         return UseCase.instance
     }
 
-    async execute({content, publicationId, authorId, parentId}:ReplyDto): Promise<CommentDto>{
+    async execute({content, publicationId, authorId, parentId}:ReplyDto): Promise<RepliesCommentDto>{
         try {
 
             if (!publicationId) {
@@ -46,7 +46,7 @@ export class UseCase{
             // Busca o comentário pai junto com suas replies
             const parentComment = await this.repository.comment.findUnique({
                 where: { id: parentId },
-                include: { replies: true } // Inclui as replies do comentário pai
+                include: { replies: true, author: true } // Inclui as replies do comentário pai
             });
 
             if (!parentComment) {
@@ -58,7 +58,13 @@ export class UseCase{
                 id: parentComment?.id,
                 content: parentComment?.content,
                 createdAt: parentComment?.createdAt,
-                authorId: parentComment?.authorId,
+                authorId:parentComment.authorId,
+                author: {
+                    id: parentComment.author.id,
+                    name: parentComment.author.name,
+                    nick: parentComment.author.nick
+                },
+                //authorId: parentComment?.authorId,
                 //postId: parentComment?.postId,
                 parentId: parentComment.parentId ?? undefined,
                 /* replies: parentComment?.replies.map(reply => ({
