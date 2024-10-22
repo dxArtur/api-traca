@@ -37,12 +37,20 @@ export class UseCase {
                 include: {
                     replies: {
                         include: {
-                            author: true, // Inclui autor das replies
+                            author: true, // Inclui autor das replies     
+                            _count: {
+                                select: { commentLikes: true } // Contagem de likes nas replies
+                            }
                         },
                     },
                     author: true, // Inclui autor dos comentários principais
+                    _count: {
+                        select: { commentLikes: true }
+                    }
                 },
             });
+
+
 
             return await Promise.all(comments.map(comment => this.mapComment(comment)));
         } catch (error) {
@@ -60,6 +68,7 @@ export class UseCase {
                 id: reply.id,
                 content: reply.content,
                 createdAt: reply.createdAt,
+                likesCount: reply._count.commentlikes,
                 author: reply.author ? {
                     id: reply.author.id,
                     name: reply.author.name,
@@ -75,6 +84,7 @@ export class UseCase {
             content: comment.content,
             createdAt: comment.createdAt,
             authorId: comment.authorId,
+            likeCount:comment._count.commentLikes,
             author: {
                 id: comment.author.id,
                 name: comment.author.name,
