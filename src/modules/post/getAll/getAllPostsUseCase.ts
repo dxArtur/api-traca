@@ -33,7 +33,11 @@ export class UseCase{
                             nick: true,
                         },
                     },
-                    likes: true,
+                    likes: {
+                        select: {
+                            userId: true, 
+                        },
+                    },
                     comments: true
                 }
             });
@@ -48,6 +52,7 @@ export class UseCase{
                     name: post.author.name,
                     nick: post.author.nick,
                 },
+                userIdsWhoLiked: post.likes.map(like => like.userId),
                 likesCount: post.likes.length, // Conta as curtidas
                 commentCount: post.comments.length, // Conta as curtidas
             }))
