@@ -6,7 +6,7 @@ const route = Router()
 const createPublicationController = CreatePostController.getInstance()
 const getAllPostController = GetAllPostController.getInstance()
 
-route.post('/post', (req, res, next)=>createPublicationController.handle(req, res, next))
-route.get('/post', (req, res, next)=>getAllPostController.handle(req, res, next))
+route.post('/publication', (req, res, next)=>createPublicationController.handle(req, res, next))
+route.get('/publication', (req, res, next)=>getAllPostController.handle(req, res, next))
 
 export default route
