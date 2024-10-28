@@ -29,6 +29,7 @@ export interface GetCommentDto {
     parentId?: string;   // ID do comentário pai (opcional)
     replies?: CommentDto[]; // Respostas ao comentário
     likeCount: number;
+    userIdsWhoLiked: string[];
     replyCount?: number;
     author: sanitizedUserInfo;
 }
@@ -42,6 +43,7 @@ export interface RepliesCommentDto {
     postId?: string;      // ID do post ao qual o comentário pertence
     parentId?: string;   // ID do comentário pai (opcional)
     replies?: CommentDto[]; // Respostas ao comentário
+    userIdsWhoLiked: string[];
     likeCount?: number
 }
 

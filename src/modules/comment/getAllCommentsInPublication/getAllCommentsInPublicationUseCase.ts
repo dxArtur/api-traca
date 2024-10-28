@@ -40,17 +40,25 @@ export class UseCase {
                             author: true, // Inclui autor das replies     
                             _count: {
                                 select: { commentLikes: true } // Contagem de likes nas replies
-                            }
+                            },
+                            commentLikes: {
+                                select: {
+                                    userId: true, // Apenas o ID do usuário que deu like
+                                },
+                            },
                         },
                     },
                     author: true, // Inclui autor dos comentários principais
                     _count: {
                         select: { commentLikes: true }
-                    }
+                    },
+                    commentLikes: {
+                        select: {
+                            userId: true, // Inclui os IDs dos usuários que curtiram o comentário
+                        },
+                    },
                 },
             });
-
-
 
             return await Promise.all(comments.map(comment => this.mapComment(comment)));
         } catch (error) {
@@ -68,7 +76,8 @@ export class UseCase {
                 id: reply.id,
                 content: reply.content,
                 createdAt: reply.createdAt,
-                likesCount: reply._count.commentlikes,
+                likesCount: reply._count,
+                userIdsWhoLiked: reply.commentLikes.map((like: {userId: string}) => like.userId),
                 author: reply.author ? {
                     id: reply.author.id,
                     name: reply.author.name,
@@ -85,6 +94,7 @@ export class UseCase {
             createdAt: comment.createdAt,
             authorId: comment.authorId,
             likeCount:comment._count.commentLikes,
+            userIdsWhoLiked: comment?.commentLikes.map((like: {userId: string}) => like.userId),
             author: {
                 id: comment.author.id,
                 name: comment.author.name,

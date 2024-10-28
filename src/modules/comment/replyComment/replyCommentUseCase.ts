@@ -46,7 +46,7 @@ export class UseCase{
             // Busca o comentário pai junto com suas replies
             const parentComment = await this.repository.comment.findUnique({
                 where: { id: parentId },
-                include: { replies: true, author: true } // Inclui as replies do comentário pai
+                include: { replies: true, author: true, commentLikes: {select: {userId: true} }} // Inclui as replies do comentário pai
             });
 
             if (!parentComment) {
@@ -59,6 +59,7 @@ export class UseCase{
                 content: parentComment?.content,
                 createdAt: parentComment?.createdAt,
                 authorId:parentComment.authorId,
+                userIdsWhoLiked:parentComment.commentLikes.map((like: {userId: string}) => like.userId),
                 author: {
                     id: parentComment.author.id,
                     name: parentComment.author.name,

@@ -33,7 +33,11 @@ export class UseCase {
                     parentId: parentId, // Busca replies para o comentário específico
                 },
                 include:{
-                    commentLikes: true,
+                    commentLikes: {
+                        select: {
+                            userId: true, // Apenas o ID do usuário que deu like
+                        },
+                    },
                     replies:true,
                     author:true
                 }
@@ -67,6 +71,7 @@ export class UseCase {
             //postId: reply.postId,
             parentId: reply.parentId,
             likeCount: reply.commentLikes.length,
+            userIdsWhoLiked: reply.commentLikes.map((like: {userId: string}) => like.userId),
             replyCount: reply.replies.length,
             // Não inclui replies aninhadas
             replies: []
