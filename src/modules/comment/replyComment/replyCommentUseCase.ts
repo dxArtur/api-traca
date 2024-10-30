@@ -23,12 +23,12 @@ export class UseCase{
         return UseCase.instance
     }
 
-    async execute({content, publicationId, authorId, parentId}:ReplyDto): Promise<RepliesCommentDto>{
+    async execute({content, authorId, parentId}:ReplyDto): Promise<RepliesCommentDto>{
         try {
 
-            if (!publicationId) {
+            /* if (!publicationId) {
                 throw new AppError("O ID da publicação é necessário.", StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
-            }
+            } */
 
             if (!parentId){
                 throw new AppError("O ID do comentário que se está respondendo é necessário.", StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST);
@@ -38,7 +38,7 @@ export class UseCase{
                 data: {
                     content: content,
                     authorId: authorId,
-                    postId: publicationId,
+                    //postId: publicationId,
                     parentId: parentId
                 },
             });

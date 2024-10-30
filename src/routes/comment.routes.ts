@@ -41,11 +41,11 @@ const getRepliesInCommentController = GetRepliesInCommentController.getInstance(
  *       400:
  *         description: Invalid request
  */
-route.post('/comment/:parentId', (req, res, next)=>commentPublicationController.handle(req, res, next))
+route.post('/comments/:parentId', (req, res, next)=>commentPublicationController.handle(req, res, next))
 route.get('/comments/:publicationId', (req, res, next)=>getAllCommentsInPublicationController.handle(req, res, next))
 
 //responnder comentário
-route.post('/reply/:publicationId/:parentId', (req, res, next)=>replyCommentController.handle(req, res, next))
+route.post('/reply/:parentId', (req, res, next)=>replyCommentController.handle(req, res, next))
 route.get('/reply/:parentId', (req, res, next)=>getRepliesInCommentController.handle(req, res, next))
 //route.get('/post', (req, res, next)=>getAllPostController.handle(req, res, next))
 

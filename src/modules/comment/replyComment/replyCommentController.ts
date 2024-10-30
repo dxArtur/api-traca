@@ -23,10 +23,10 @@ export class ReplyCommentController {
 
     async handle(req: Request, res: Response, next: NextFunction) {
         try {
-            const publicationId = req.params.publicationId
+            //const publicationId = req.params.publicationId
             const parentId = req.params.parentId
             const {content, authorId}: ReplyDto = req.body
-            const response = await this.useCase.execute({content, publicationId, authorId, parentId})
+            const response = await this.useCase.execute({content, authorId, parentId})
 
             return res.status(StatusCode.STATUS_CODE_SUCESS.CREATED).json(response)
         } catch (error) {
