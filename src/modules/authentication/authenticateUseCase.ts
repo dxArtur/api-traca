@@ -2,7 +2,7 @@ import { RepositoryClient } from "../../database/prismaClient"
 import { PrismaClient } from "@prisma/client"
 import { BcryptHelper } from "../../utils/BcryptHelper"
 import { JwtHelper } from "../../utils/JwtHelper"
-import { sanitizedUserInfo, SigninUserDto, UserDto } from "../../dto/UserDto"
+import { sanitizedOutputSignin, sanitizedUserInfo, SigninUserDto, UserDto } from "../../dto/UserDto"
 import { AppError } from '../../errors/AppErrors'
 import { JwtPayload } from "./JwtPayload"
 import ErrorMessages from "../../custom/constants/ErrorMessages"
@@ -30,6 +30,14 @@ export class AuthUseCase {
             const userAttemphAuth = await this.repository.user.findFirstOrThrow({
                 where: {
                     email: dataUser.email,
+                },
+                include: {
+                    _count: {
+                        select: {
+                            followers: true,
+                            posts: true,
+                        }
+                    }
                 }
             })
 
@@ -40,11 +48,13 @@ export class AuthUseCase {
                 throw new AppError(ErrorMessages.BAD_AUTH, StatusCode.STATUS_CODE_CLIENT.BAD_REQUEST)
             }
 
-            const userData: sanitizedUserInfo = {
+            const userData: sanitizedOutputSignin = {
                 id: userAttemphAuth.id,
                 email: userAttemphAuth.email,
                 name: userAttemphAuth.name,
-                nick: userAttemphAuth.nick
+                nick: userAttemphAuth.nick,
+                followersCount: userAttemphAuth._count.followers,
+                postsCount: userAttemphAuth._count.posts,
             }
 
             const payload: JwtPayload = userData

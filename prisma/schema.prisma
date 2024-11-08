@@ -21,6 +21,10 @@ model User {
   comments      Comment[]
   commentLikes  CommentLike[]  // Relacionamento para likes em comentários
 
+  //avaliationId String
+  //avaliation Avaliation @relation(name: "AvaliationToUser", fields: [avaliationId], references: [id])
+  reviews       Rating[]
+
   @@map("users")
 }
 
@@ -93,4 +97,33 @@ model CommentLike {
   @@unique([userId, commentId]) // Garantir que um usuário não possa curtir o mesmo comentário mais de uma vez
 
   @@map("comment_likes")
+}
+
+model Book {
+  id        String   @id @default(uuid())  // ID único do livro
+  title     String  // Título do livro
+  author    String?  // Autor do livro
+  createdAt DateTime @default(now())  // Data de criação
+  updatedAt DateTime @updatedAt  // Data de atualização
+
+  rating   Rating[] // Relacionamento com avaliações
+
+  @@unique([title, author])  // Garante que não existam dois livros com o mesmo título do mesmo autor
+  @@map("books")  // Nome da tabela no banco
+}
+
+model Rating {
+  id        String   @id @default(uuid())  // ID único da avaliação
+  rating    Int?      // Nota (de 1 a 5, por exemplo)
+  review   String?   // Resenha do livro
+  createdAt DateTime @default(now())  // Data de criação da avaliação
+
+  authorId    String   // ID do usuário que fez a avaliação
+  author      User     @relation(fields: [authorId], references: [id])  // Relacionamento com o usuário
+
+  bookId    String   // ID do livro avaliado
+  book      Book     @relation(fields: [bookId], references: [id])  // Relacionamento com o livro
+
+  @@unique([authorId, bookId])  // Garantir que um usuário não possa avaliar o mesmo livro mais de uma vez
+  @@map("ratings")  // Nome da tabela no banco
 }

@@ -32,3 +32,12 @@ export interface sanitizedUserInfo{
     nick: string;
     email: string;
 }
+
+export interface sanitizedOutputSignin{
+    id: string;
+    name: string;
+    nick: string;
+    email: string;
+    followersCount: number;
+    postsCount: number;
+}

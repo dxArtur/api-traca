@@ -5,8 +5,13 @@ import cors from 'cors'
 import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
+import swaggerDocs from "./config/swagger"
+import SwaggerUiOptions from "swagger-ui-express"
+//import swagger from "./config/swagger.json"
 
 const app = express()
+
+
 
 app.use(cors())
 
@@ -23,5 +28,7 @@ app.use(session({
 
 app.use(express.json())
 app.use('/api', routes)
+
+app.use('/api-docs', SwaggerUiOptions.serve, SwaggerUiOptions.setup(swaggerDocs))
 
 export default app
