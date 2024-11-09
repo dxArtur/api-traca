@@ -21,7 +21,7 @@ export class GetMyPublicationsController {
 
     async handle(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = req.body.userId
+            const {userId} = req.params
             const response = await this.useCase.execute(userId)
             return res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(response)
         } catch (error) {
