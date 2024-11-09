@@ -9,7 +9,7 @@ const getAllPostController = GetAllPostController.getInstance()
 
 route.post('/publication', (req, res, next)=>createPublicationController.handle(req, res, next))
 route.get('/publication', (req, res, next)=>getAllPostController.handle(req, res, next))
-route.get('/myPublications', (req:Request, res: Response, next:NextFunction)=>
+route.get('/my-publications/:userId', (req:Request, res: Response, next:NextFunction)=>
     GetMyPublicationsController.getInstance().handle(req, res, next))
 
 
