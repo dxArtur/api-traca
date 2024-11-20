@@ -26,6 +26,8 @@ model User {
   reviews       Rating[]
 
   @@map("users")
+  ClubMember ClubMember[]
+  BookClub BookClub[] @relation("ClubHost")
 }
 
 model Follow {
@@ -70,6 +72,7 @@ model Comment {
   id        String   @id @default(uuid())
   content   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   authorId  String
   author    User @relation(fields: [authorId], references: [id])
@@ -107,6 +110,7 @@ model Book {
   updatedAt DateTime @updatedAt  // Data de atualização
 
   rating   Rating[] // Relacionamento com avaliações
+  BookClub BookClub[]
 
   @@unique([title, author])  // Garante que não existam dois livros com o mesmo título do mesmo autor
   @@map("books")  // Nome da tabela no banco
@@ -126,4 +130,35 @@ model Rating {
 
   @@unique([authorId, bookId])  // Garantir que um usuário não possa avaliar o mesmo livro mais de uma vez
   @@map("ratings")  // Nome da tabela no banco
+}
+
+
+model BookClub {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  hostId      String
+  host        User @relation("ClubHost", fields: [hostId], references: [id]) // Relação de quem é o host (criador) do clube
+
+
+  members     ClubMember[]  // Relacionamento com os membros do clube
+  books       Book[]        // Livros associados ao clube
+
+  @@map("book_clubs")
+}
+
+model ClubMember {
+  id        String @id @default(uuid())
+  userId    String
+  clubId    String
+
+  user      User     @relation(fields: [userId], references: [id])
+  club      BookClub @relation(fields: [clubId], references: [id])
+
+  @@unique([userId, clubId])  // Garantir que um usuário só possa ser membro de um clube uma vez
+
+  @@map("club_members")
 }
