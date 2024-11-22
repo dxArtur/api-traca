@@ -55,6 +55,7 @@ export class AuthUseCase {
                 nick: userAttemphAuth.nick,
                 followersCount: userAttemphAuth._count.followers,
                 postsCount: userAttemphAuth._count.posts,
+                profilePicture: userAttemphAuth.profilePicture,
             }
 
             const payload: JwtPayload = userData
