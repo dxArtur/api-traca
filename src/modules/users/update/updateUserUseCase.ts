@@ -22,7 +22,7 @@ export class UpdateUserUseCase{
         return UpdateUserUseCase.instance
     }
 
-    async execute(userId: string, dataUpdate: UserDto) {
+    async execute(userId: string, dataUpdate:Partial<UserDto>) {
         try {
             const userExist = await this.repository.user.findUniqueOrThrow({
                 where:{
@@ -42,7 +42,8 @@ export class UpdateUserUseCase{
                     id: dataUpdate.id,
                     name: dataUpdate.name,
                     password: dataUpdate.password,
-                    nick: dataUpdate.nick
+                    nick: dataUpdate.nick,
+                    profilePicture: dataUpdate.profilePicture
                 }
             })
 
