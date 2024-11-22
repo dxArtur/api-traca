@@ -10,7 +10,7 @@ import multer from "multer";
 const route = Router()
 
 const storage = multer.memoryStorage();  // Usando a memória para armazenar o arquivo
-const uploadMiddleware = multer({ storage }).single('profilePicture');
+const uploadMiddleware = multer({ storage }).single('photo');
 
 route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
