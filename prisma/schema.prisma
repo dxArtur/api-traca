@@ -13,6 +13,7 @@ model User {
   nick          String        @unique
   name          String
   password      String
+  profilePicture String?
 
   following     Follow[]      @relation("FollowingRelation")
   followers      Follow[]      @relation("FollowersRelation")
@@ -47,6 +48,8 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  media String?
+
   authorId  String
   author    User @relation(fields: [authorId], references: [id])
   likes     Like[]
@@ -73,6 +76,7 @@ model Comment {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  media String?
 
   authorId  String
   author    User @relation(fields: [authorId], references: [id])
@@ -139,6 +143,7 @@ model BookClub {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  cover String?
 
   hostId      String
   host        User @relation("ClubHost", fields: [hostId], references: [id]) // Relação de quem é o host (criador) do clube
