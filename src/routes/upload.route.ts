@@ -5,17 +5,22 @@ import { AppError } from "../errors/AppErrors";
 import ERROR_MESSAGES from "./../custom/constants/ErrorMessages"
 import STATUS_CODE from "./../custom/constants/StatusCode"
 import { UpdateUserUseCase } from "../modules/users/update/updateUserUseCase";
+import multer from "multer";
 
 const route = Router()
 
-route.post('/upload/profile-picture/:userId', upload.single('photo'), async (req, res) => {
+const storage = multer.memoryStorage();  // Usando a memória para armazenar o arquivo
+const uploadMiddleware = multer({ storage }).single('profilePicture');
+
+route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'Nenhuma foto enviada' });
     }
 
-    const result = await cloudinary.v2.uploader.upload_stream(
+    console.log(req.file)
+    const result = cloudinary.v2.uploader.upload_stream(
       {
         folder: 'traca/profile_pictures/', // Pasta onde as fotos serão armazenadas
         resource_type: 'image', // Tipo do recurso, pode ser 'image', 'video', etc.
@@ -27,7 +32,7 @@ route.post('/upload/profile-picture/:userId', upload.single('photo'), async (req
 
         const imageUrl = result?.secure_url||''
         
-        UpdateUserUseCase.getInstance().execute(userId, {profilePicture: imageUrl})
+        console.log(UpdateUserUseCase.getInstance().execute(userId, {profilePicture: imageUrl}))
         
         res.status(200).json({
           message: 'Foto carregada com sucesso',
