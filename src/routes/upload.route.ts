@@ -12,11 +12,11 @@ const route = Router()
 
 const storage = multer.memoryStorage();  // Usando a memória para armazenar o arquivo
 const uploadMiddleware = multer({ storage }).single('photo')
-route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res, next) => {
+/* route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res, next) => {
   await UpdateUserController.getInstance().handle(req, res, next)
-}) 
+})  */
 
-/* route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
+route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
   try {
     if (!req.file) {
@@ -50,6 +50,6 @@ route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res,
   } catch (error) {
     throw error
   }
-});  */
+});
 
 export default route 
