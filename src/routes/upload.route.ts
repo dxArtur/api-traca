@@ -6,11 +6,15 @@ import ERROR_MESSAGES from "./../custom/constants/ErrorMessages"
 import STATUS_CODE from "./../custom/constants/StatusCode"
 import { UpdateUserUseCase } from "../modules/users/update/updateUserUseCase";
 import multer from "multer";
+import { UpdateUserController } from "../modules/users/update/updateUserController";
 
 const route = Router()
 
 const storage = multer.memoryStorage();  // Usando a memória para armazenar o arquivo
-const uploadMiddleware = multer({ storage }).single('photo');
+const uploadMiddleware = multer({ storage }).single('photo')
+/* route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res, next) => {
+  await UpdateUserController.getInstance().handle(req, res, next)
+}) */
 
 route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
@@ -46,6 +50,6 @@ route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res)
   } catch (error) {
     throw error
   }
-});
+}); 
 
 export default route 
