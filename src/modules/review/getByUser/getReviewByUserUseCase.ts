@@ -4,8 +4,8 @@ import { AppError } from "../../../errors/AppErrors";
 import ErrorMessages from "../../../custom/constants/ErrorMessages";
 import StatusCode from "../../../custom/constants/StatusCode";
 
-export class GetReviewByUserUseCase {
-  private static instance: GetReviewByUserUseCase;
+export class UseCase {
+  private static instance: UseCase;
   private repository: PrismaClient;
 
   constructor(repository: PrismaClient) {
@@ -13,11 +13,11 @@ export class GetReviewByUserUseCase {
   }
 
   public static getInstance() {
-    if (!GetReviewByUserUseCase.instance) {
-      GetReviewByUserUseCase.instance = new GetReviewByUserUseCase(RepositoryClient.getInstance());
+    if (! UseCase.instance) {
+       UseCase.instance = new  UseCase(RepositoryClient.getInstance());
     }
 
-    return GetReviewByUserUseCase.instance;
+    return  UseCase.instance;
   }
 
   async execute(authorReviewId: string) {
