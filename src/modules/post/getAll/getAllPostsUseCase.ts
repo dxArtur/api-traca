@@ -31,6 +31,7 @@ export class UseCase{
                             id: true,
                             name: true,
                             nick: true,
+                            profilePicture: true,
                         },
                     },
                     likes: {
@@ -51,19 +52,14 @@ export class UseCase{
                     id: post.author.id,
                     name: post.author.name,
                     nick: post.author.nick,
+                    profilePicture: post.author.profilePicture
                 },
                 userIdsWhoLiked: post.likes.map(like => like.userId),
                 likesCount: post.likes.length, // Conta as curtidas
                 commentCount: post.comments.length, // Conta as curtidas
             }))
         } catch (error) {
-            console.error('Erro ao listar postagens:', error);
-
-            if (error instanceof AppError) {
-                throw error;
-            }
-
-            throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
+            throw error
         }
     }
 
