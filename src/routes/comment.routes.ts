@@ -3,7 +3,6 @@ import { ReplyCommentController } from "../modules/comment/replyComment/replyCom
 import { GetRepliesInCommentController } from "../modules/comment/getRepliesInComment/getRepliesInCommentController"
 import { GetAllCommentsInPublicationController } from "../modules/comment/getAllCommentsInPublication/getAllCommentsInPublicationController"
 import { Router, Request, Response, NextFunction } from "express"
-import { EditCommentController } from "../modules/comment/edit/editCommentController"
 
 const route = Router()
 const commentPublicationController = CommentPublicationController.getInstance()
@@ -48,7 +47,6 @@ route.get('/comments/:publicationId', (req, res, next)=>getAllCommentsInPublicat
 //responnder comentário
 route.post('/reply/:parentId', (req, res, next)=>replyCommentController.handle(req, res, next))
 route.get('/reply/:parentId', (req, res, next)=>getRepliesInCommentController.handle(req, res, next))
-route.get('/comment/:commentId', (req, res, next)=>EditCommentController.getInstance().handle(req, res, next))
 //route.get('/post', (req, res, next)=>getAllPostController.handle(req, res, next))
 
 export default route
