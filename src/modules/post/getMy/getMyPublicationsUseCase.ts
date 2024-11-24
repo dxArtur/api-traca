@@ -25,20 +25,39 @@ export class UseCase {
         try {
             const myPublications = await this.repository.post.findMany({
                 where: {
-                  authorId: userId
-                }
-              })
+                    authorId: userId,
+                },
+                include: {
+                    // Incluindo informações de curtidas e comentários
+                    _count: {
+                        select: {
+                            likes: true, // Contagem de curtidas
+                            comments: true, // Contagem de comentários
+                        },
+                    },
+                    likes: {
+                        select: {
+                            userId: true, // IDs dos usuários que curtiram a publicação
+                        },
+                    },
+                },
+            });
 
-            return myPublications
+            // Formatando os resultados conforme a tipagem esperada
+            const formattedPublications = myPublications.map(publication => ({
+                id: publication.id,
+                content: publication.content,
+                createdAt: publication.createdAt.toISOString(),
+                updatedAt: publication.updatedAt.toISOString(),
+                authorId: publication.authorId,
+                likesCount: publication._count.likes, // Contagem de curtidas
+                commentCount: publication._count.comments, // Contagem de comentários
+                userIdsWhoLiked: publication.likes.map(like => like.userId), // IDs dos usuários que curtiram
+            }));
+
+            return formattedPublications
         } catch (error) {
-            console.error('Erro durante a consulta de publicações:', error);
-            // Se o erro for de outro tipo
-            if (error instanceof AppError) {
-                throw error;
-            }
-
-            // Caso erro desconhecido
-            throw new AppError(ErrorMessages.INTERNAL_ERROR_SERVER, StatusCode.STATUS_CODE_SERVER.INTERNAL_SERVER_ERROR);
+            throw error
         }
     }
 }
