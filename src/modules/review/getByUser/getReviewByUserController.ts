@@ -1,19 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-import { GetReviewsUseCase } from "./getReviewByUserUseCase";
+import { GetReviewByUserUseCase } from "./getReviewByUserUseCase";
 import { AppError } from "../../../errors/AppErrors";
 import StatusCode from "../../../custom/constants/StatusCode";
 
-export class GetReviewsController {
-  private static instance: GetReviewsController;
+export class GetReviewByUserController {
+  private static instance: GetReviewByUserController;
 
   private constructor() {}
 
   public static getInstance() {
-    if (!GetReviewsController.instance) {
-      GetReviewsController.instance = new GetReviewsController();
+    if (!GetReviewByUserController.instance) {
+      GetReviewByUserController.instance = new GetReviewByUserController();
     }
 
-    return GetReviewsController.instance;
+    return GetReviewByUserController.instance;
   }
 
   async handle(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +26,7 @@ export class GetReviewsController {
       }
 
       // Chama o caso de uso para obter todas as reviews do autor
-      const reviews = await GetReviewsUseCase.getInstance().execute(authorReviewId);
+      const reviews = await GetReviewByUserUseCase.getInstance().execute(authorReviewId);
 
       // Retorna as reviews com sucesso
       res.status(StatusCode.STATUS_CODE_SUCESS.OK).json(reviews);
