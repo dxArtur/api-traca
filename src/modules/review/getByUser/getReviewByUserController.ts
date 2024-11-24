@@ -6,6 +6,7 @@ import StatusCode from "../../../custom/constants/StatusCode";
 export class GetReviewByUserController {
   private static instance: GetReviewByUserController;
   private useCase: UseCase
+
   private constructor(useCase: UseCase) {
     this.useCase=useCase
   }
@@ -19,7 +20,7 @@ export class GetReviewByUserController {
   }
 
   async handle(req: Request, res: Response, next: NextFunction) {
-    const { authorId } = req.params;
+    const authorId = req.params.authorId
 
     try {
       // Verifica se o ID do autor está presente

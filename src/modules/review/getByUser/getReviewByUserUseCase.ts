@@ -20,12 +20,12 @@ export class UseCase {
     return  UseCase.instance;
   }
 
-  async execute(authorReviewId: string) {
+  async execute(authorId: string) {
     try {
       // Busca todas as avaliações feitas pelo autor específico
       const reviews = await this.repository.rating.findMany({
         where: {
-          authorId: authorReviewId,
+          authorId: authorId,
         },
         include: {
           book: true, // Inclui as informações do livro associado a cada avaliação
