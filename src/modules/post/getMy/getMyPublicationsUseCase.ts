@@ -40,6 +40,7 @@ export class UseCase {
                             userId: true, // IDs dos usuários que curtiram a publicação
                         },
                     },
+                    author: true
                 },
             });
 
@@ -49,7 +50,7 @@ export class UseCase {
                 content: publication.content,
                 createdAt: publication.createdAt,
                 updatedAt: publication.updatedAt,
-                authorId: publication.authorId,
+                author: publication.author,
                 likesCount: publication._count.likes, // Contagem de curtidas
                 commentCount: publication._count.comments, // Contagem de comentários
                 userIdsWhoLiked: publication.likes.map(like => like.userId), // IDs dos usuários que curtiram
