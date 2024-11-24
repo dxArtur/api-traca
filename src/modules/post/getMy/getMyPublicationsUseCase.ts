@@ -47,8 +47,8 @@ export class UseCase {
             const formattedPublications = myPublications.map(publication => ({
                 id: publication.id,
                 content: publication.content,
-                createdAt: publication.createdAt.toISOString(),
-                updatedAt: publication.updatedAt.toISOString(),
+                createdAt: publication.createdAt,
+                updatedAt: publication.updatedAt,
                 authorId: publication.authorId,
                 likesCount: publication._count.likes, // Contagem de curtidas
                 commentCount: publication._count.comments, // Contagem de comentários
