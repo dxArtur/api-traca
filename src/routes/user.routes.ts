@@ -2,9 +2,9 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { SignupController } from '../modules/users/signup/signupController'
 import { GetUserController } from '../modules/users/getUser/getUserController'
 import { ProfileController } from '../modules/users/profile/profileController'
-import { errorHandle } from '../middlewares/errorHandle'
 import { GetAllMyLikesController } from '../modules/likes/getAllMyLikes/getAllMyLikesController'
-import { GetMyPublicationsController } from '../modules/post/getMy/getMyPublicationsController'
+import { FollowUserController } from '../modules/users/follow/FollowUserController'
+import { UpdateUserController } from '../modules/users/update/updateUserController'
 
 const route = Router()
 const signupController = SignupController.getInstance()
@@ -70,5 +70,14 @@ route.get('/profile', (req:Request, res: Response, next:NextFunction)=>
 
 route.get('/user/:userId/likes', (req:Request, res: Response, next:NextFunction)=>
     GetAllMyLikesController.getInstance().handle(req, res, next))
+
+route.post('/user/follow/:followerId/:followingId', async (req, res, next) => {
+    await FollowUserController.getInstance().handle(req, res, next);
+});
+
+route.put('/user/:userId', async (req, res, next) => {
+    await UpdateUserController.getInstance().handle(req, res, next);
+});
+
 
 export default route 
