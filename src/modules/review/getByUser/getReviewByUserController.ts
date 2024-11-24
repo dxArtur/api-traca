@@ -20,8 +20,6 @@ export class GetReviewByUserController {
   }
 
   async handle(req: Request, res: Response, next: NextFunction) {
-    console.log(req.params)
-    console.log(req.body)
     const authorId = req.params.authorId
 
     try {
