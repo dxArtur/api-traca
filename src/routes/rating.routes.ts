@@ -7,7 +7,7 @@ const route = Router()
 route.post('/rating', (req:Request, res: Response, next:NextFunction)=>
     CreateReviewController.getInstance().handle(req, res, next))
 
-route.get('/rating/:userID', (req:Request, res: Response, next:NextFunction)=>
+route.get('/rating/:authorId', (req:Request, res: Response, next:NextFunction)=>
     GetReviewByUserController.getInstance().handle(req, res, next))
 
 export default route
