@@ -16,7 +16,7 @@ const uploadMiddleware = multer({ storage }).single('photo')
   await UpdateUserController.getInstance().handle(req, res, next)
 })  */
 
-route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
+route.put('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
   try {
     if (!req.file) {
@@ -36,8 +36,8 @@ route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res)
 
         const imageUrl = result?.secure_url||''
         
-        console.log(UpdateUserUseCase.getInstance().execute(userId, {profilePicture: imageUrl}))
-        
+        const response = UpdateUserUseCase.getInstance().execute(userId, {profilePicture: imageUrl})
+        console.log(response)
         res.status(200).json({
           message: 'Foto carregada com sucesso',
           url: result!.secure_url,  // URL segura da foto no Cloudinary
