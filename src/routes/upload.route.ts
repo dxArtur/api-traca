@@ -11,7 +11,7 @@ import { UpdateUserController } from "../modules/users/update/updateUserControll
 const route = Router()
 
 const storage = multer.memoryStorage();  // Usando a memória para armazenar o arquivo
-const uploadMiddleware = multer({ storage }).single('photo')
+const uploadMiddleware = multer({ storage }).single('profilePicture')
 /* route.post('/upload/profile-picture/:userId', uploadMiddleware, async (req, res, next) => {
   await UpdateUserController.getInstance().handle(req, res, next)
 })  */
@@ -19,37 +19,41 @@ const uploadMiddleware = multer({ storage }).single('photo')
 route.put('/upload/profile-picture/:userId', uploadMiddleware, async (req, res) => {
   const userId = req.params.userId
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'Nenhuma foto enviada' });
-    }
-
-    console.log(req.file)
-    const result = cloudinary.v2.uploader.upload_stream(
-      {
-        folder: 'traca/profile_pictures/', // Pasta onde as fotos serão armazenadas
-        resource_type: 'image', // Tipo do recurso, pode ser 'image', 'video', etc.
-      },
-      (error, result) => {
-        if (error) {
-          return res.status(500).json({ error: 'Erro ao carregar a imagem', details: error });
+    // Upload da imagem para o Cloudinary
+    const uploadResult = await new Promise<any>((resolve, reject) => {
+      const uploadStream = cloudinary.v2.uploader.upload_stream(
+        {
+          folder: 'traca/profile_pictures/', // Pasta no Cloudinary
+          resource_type: 'image', // Tipo de recurso
+        },
+        (error, result) => {
+          if (error) {
+            reject(error); // Rejeita a promessa em caso de erro
+          } else {
+            resolve(result); // Resolve com o resultado da imagem
+          }
         }
+      );
 
-        const imageUrl = result?.secure_url||''
-        
-        const response = UpdateUserUseCase.getInstance().execute(userId, {profilePicture: imageUrl})
-        console.log(response)
-        res.status(200).json({
-          message: 'Foto carregada com sucesso',
-          url: result!.secure_url,  // URL segura da foto no Cloudinary
-        });
-      }
-    );
+      uploadStream.end(req.file?.buffer!);  // Envia o buffer da imagem
+    });
 
-    result.end(req.file.buffer)
+    // URL segura da imagem
+    const imageUrl = uploadResult?.secure_url || '';
+
+    // Chama o caso de uso para atualizar a foto de perfil do usuário no banco de dados
+    const updatedUser = await UpdateUserUseCase.getInstance().execute(userId, { profilePicture: imageUrl });
+
+    // Retorna sucesso com a URL da foto carregada
+    return res.status(200).json({
+      message: 'Foto carregada com sucesso',
+      user: updatedUser,
+      url: imageUrl, // URL segura da foto no Cloudinary
+    });
 
   } catch (error) {
     throw error
   }
 });
 
-export default route 
+export default route;
