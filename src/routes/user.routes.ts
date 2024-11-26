@@ -5,6 +5,7 @@ import { ProfileController } from '../modules/users/profile/profileController'
 import { errorHandle } from '../middlewares/errorHandle'
 import { GetAllMyLikesController } from '../modules/likes/getAllMyLikes/getAllMyLikesController'
 import { GetMyPublicationsController } from '../modules/post/getMy/getMyPublicationsController'
+import { GetUserByIdController } from '../modules/users/getById/getByIdController'
 
 const route = Router()
 const signupController = SignupController.getInstance()
@@ -70,5 +71,8 @@ route.get('/profile', (req:Request, res: Response, next:NextFunction)=>
 
 route.get('/user/:userId/likes', (req:Request, res: Response, next:NextFunction)=>
     GetAllMyLikesController.getInstance().handle(req, res, next))
+
+route.get('/user/:userId', (req:Request, res: Response, next:NextFunction)=>
+    GetUserByIdController.getInstance().handle(req, res, next))
 
 export default route 
