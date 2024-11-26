@@ -72,7 +72,7 @@ route.get('/profile', (req:Request, res: Response, next:NextFunction)=>
 route.get('/user/:userId/likes', (req:Request, res: Response, next:NextFunction)=>
     GetAllMyLikesController.getInstance().handle(req, res, next))
 
-route.get('/user/:userId', (req:Request, res: Response, next:NextFunction)=>
+route.get('/userById/:userId', (req:Request, res: Response, next:NextFunction)=>
     GetUserByIdController.getInstance().handle(req, res, next))
 
 export default route 
